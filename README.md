@@ -1,5 +1,6 @@
 -----------------------------------------------------------------Aggregation Function----------------------------------------------------------------------
 What Are Aggregate Functions?
+
 Aggregate functions in SQL are used to perform calculations on multiple rows of a table and return a single result (one value).
 
 👉 For example:
