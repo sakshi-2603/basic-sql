@@ -117,7 +117,8 @@ SUM()	Total of values	SUM(marks)
 AVG()	Average value	AVG(marks)
 MIN()	Minimum value	MIN(marks)
 MAX()	Maximum value	MAX(marks)
-------------------------------------------------------------- View-------------------------------------------------------------------
+
+------------------------------------------------------------- View-----------------------------------------------------------------
 🧩 What Is a View in SQL?
 A VIEW is a virtual table that is based on the result of an SQL query.
 It looks and acts like a table but does not store data physically — it stores only the SQL query.
