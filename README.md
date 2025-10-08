@@ -121,6 +121,7 @@ MAX()	Maximum value	MAX(marks)
 ------------------------------------------------------------- View-------------------------------------------------------------------
 
 🧩 What Is a View in SQL?
+
 A VIEW is a virtual table that is based on the result of an SQL query.
 It looks and acts like a table but does not store data physically — it stores only the SQL query.
 You can select, join, and filter data from one or more tables and save that query as a view.
