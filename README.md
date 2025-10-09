@@ -257,3 +257,210 @@ Query view	SELECT * FROM v2;	Works like table
 
 Why and When to Use a View
 You use a view when you want to make your SQL cleaner, safer, and reusable — especially when dealing with complex queries, large systems, or restricted access.
+
+------------------------------ Trigger ----------------------------------------
+
+What is a Trigger in SQL?
+
+A Trigger in SQL is a special stored procedure that automatically executes (fires) in response to certain events on a table or view.
+
+💡 In short:
+
+A trigger is a set of SQL statements that automatically runs when an INSERT, UPDATE, or DELETE operation occurs on a specified table.
+
+🔹 Types of Triggers
+Type	Description
+BEFORE Trigger	Executes before the data modification (before insert/update/delete).
+AFTER Trigger	Executes after the data modification.
+INSTEAD OF Trigger	Used mostly in views, executes instead of the triggering action.
+🔹 Trigger Event Operations
+
+A trigger can fire on the following events:
+
+INSERT
+UPDATE
+DELETE
+
+🔹 Syntax of a Trigger
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- SQL statements
+END;
+
+🔹 Example Database Setup
+
+Let’s create two tables:
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+CREATE TABLE emp_audit (
+    audit_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_id INT,
+    action VARCHAR(20),
+    old_salary DECIMAL(10,2),
+    new_salary DECIMAL(10,2),
+    action_time DATETIME
+);
+
+
+Now we’ll create triggers for INSERT, UPDATE, and DELETE events.
+
+⚙️ 1. INSERT Trigger
+✅ Goal:
+
+Whenever a new employee is inserted, record this action in the emp_audit table.
+
+🧠 Trigger Code:
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO emp_audit(emp_id, action, new_salary, action_time)
+    VALUES (NEW.emp_id, 'INSERT', NEW.salary, NOW());
+END;
+
+⚡ Explanation:
+
+AFTER INSERT → Trigger runs after an insert.
+NEW → Refers to the newly inserted row.
+A record is added in emp_audit every time a new employee is added.
+
+💬 Example:
+INSERT INTO employees(name, salary) VALUES ('Sakshi', 40000);
+
+Result:
+emp_id	name	salary
+1	Sakshi	40000
+audit_id	emp_id	action	old_salary	new_salary	action_time
+1	1	INSERT	NULL	40000.00	2025-10-09 20:15:00
+⚙️ 2. UPDATE Trigger
+✅ Goal:
+
+Whenever an employee’s salary changes, record the old and new salary in the audit table.
+
+🧠 Trigger Code:
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO emp_audit(emp_id, action, old_salary, new_salary, action_time)
+    VALUES (OLD.emp_id, 'UPDATE', OLD.salary, NEW.salary, NOW());
+END;
+
+⚡ Explanation:
+
+AFTER UPDATE → Trigger runs after an update.
+OLD → The row’s data before the update.
+NEW → The row’s data after the update.
+
+💬 Example:
+UPDATE employees
+SET salary = 50000
+WHERE emp_id = 1;
+
+Result:
+emp_id	name	salary
+1	Sakshi	50000
+audit_id	emp_id	action	old_salary	new_salary	action_time
+2	1	UPDATE	40000.00	50000.00	2025-10-09 20:18:00
+⚙️ 3. DELETE Trigger
+✅ Goal:
+
+Whenever an employee is deleted, record the deleted employee details in the audit table.
+
+🧠 Trigger Code:
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO emp_audit(emp_id, action, old_salary, action_time)
+    VALUES (OLD.emp_id, 'DELETE', OLD.salary, NOW());
+END;
+
+⚡ Explanation:
+
+AFTER DELETE → Trigger runs after a delete.
+OLD → Refers to the deleted row’s data.
+
+💬 Example:
+DELETE FROM employees WHERE emp_id = 1;
+
+Result:
+emp_id	name	salary
+(no rows)		
+audit_id	emp_id	action	old_salary	new_salary	action_time
+3	1	DELETE	50000.00	NULL	2025-10-09 20:20:00
+⚙️ BEFORE Triggers Example
+✅ Goal:
+
+Before inserting a record, ensure salary is not less than 30000.
+
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < 30000 THEN
+        SET NEW.salary = 30000;
+    END IF;
+END;
+
+💬 Example:
+INSERT INTO employees(name, salary) VALUES ('Rahul', 25000);
+
+
+👉 The trigger will automatically set salary = 30000, not 25000.
+⚙️ INSTEAD OF Trigger (used on Views)
+
+If you have a view that joins multiple tables, you can’t directly insert or update it.
+You can use INSTEAD OF triggers to define what should happen instead.
+
+Example:
+CREATE VIEW emp_view AS
+SELECT emp_id, name, salary FROM employees;
+
+CREATE TRIGGER instead_of_insert
+INSTEAD OF INSERT ON emp_view
+FOR EACH ROW
+BEGIN
+    INSERT INTO employees(name, salary)
+    VALUES (NEW.name, NEW.salary);
+END;
+
+
+Now inserting into the view will actually insert into the employees table.
+
+🔹 Viewing and Dropping Triggers
+View existing triggers
+SHOW TRIGGERS;
+
+Drop a trigger
+DROP TRIGGER IF EXISTS after_employee_insert;
+
+📘 Summary Table
+Operation	Timing	OLD / NEW	Typical Use
+BEFORE INSERT	NEW	Validate or modify data before insert	
+AFTER INSERT	NEW	Log new inserts	
+BEFORE UPDATE	OLD + NEW	Validate or modify updated data	
+AFTER UPDATE	OLD + NEW	Track changes	
+BEFORE DELETE	OLD	Validate delete	
+AFTER DELETE	OLD	Log deleted data	
+INSTEAD OF	NEW/OLD	Used in views	
+🎯 Real-World Uses of Triggers
+
+✅ Maintaining an audit log
+✅ Enforcing business rules (e.g., prevent negative balance)
+✅ Auto-updating related tables
+✅ Validating data before insert/update
+✅ Synchronizing data between tables
+
+Would you like me to make a diagram/table flow showing how the trigger fires and data flows for each operation (INSERT, UPDATE, DELETE)?
+It helps visualize how OLD and NEW values move between tables.
+
+
