@@ -110,6 +110,7 @@ values (101,"sakshi",25000),
        
        
 set sql_safe_updates = 0;
+----------------------------after insert trigger----------------------------
 delimiter //
 create trigger after_insert_trigger
 after insert on transactions
@@ -134,7 +135,7 @@ insert into transactions (acc_no,trans_type,amount,trans_time)
 values(102,'Deposit',2000,now());
 select * from transactions;
 select * from accounts;
-
+--------------------------------------before insert trigger-----------------------------
 delimiter //
 create trigger before_insert_trigger
 before insert on transactions
@@ -158,7 +159,7 @@ insert into transactions (acc_no,trans_type,amount,trans_time)
 values (101,'Withdraw',20000,now());
 
 select * from accounts;
-
+-------------------------------delete trigger-------------------------
 delimiter //
 create trigger after_delete_trigger
 after delete on transactions
@@ -185,7 +186,35 @@ values(101,'Deposit',2000,now()),
 select * from accounts;
 select * from transactions;
 delete from transactions where trans_id = 3;
-    
 
+----------------------------update trigger------------------------- 
+delimiter //
+create trigger after_update_trigger
+after update on transactions
+for each row
+begin 
+     declare diff decimal(10,2);
+     set diff = new.amount - old.amount;
+	 if upper(new.trans_type) = 'Deposit' then
+     update accounts
+     set balance = balance + diff
+     where acc_no = new.acc_no;
+     
+     elseif upper(new.trans_type) = 'Withdraw' then 
+     update accounts
+     set balance = balance - diff
+     where acc_no = new.acc_no;
+     end if;
+end;
+// 
+delimiter ;
+
+set sql_safe_updates = 0;
+update transactions 
+set amount = 3000
+where acc_no = 101;
+
+select * from transactions
+where trans_type = 'Deposit' and acc_no = 101;
 
 
