@@ -463,4 +463,139 @@ INSTEAD OF	NEW/OLD	Used in views
 Would you like me to make a diagram/table flow showing how the trigger fires and data flows for each operation (INSERT, UPDATE, DELETE)?
 It helps visualize how OLD and NEW values move between tables.
 
+-----------------------------------------------------Constraints Query ------------------------------------------------------------------
+What Are Constraints?
 
+Constraints in SQL are rules applied to table columns to ensure the accuracy and reliability of data in a database.
+
+They prevent invalid data from being entered into the table.
+
+Types of SQL Constraints
+
+Constraint	                                                         Purpose
+
+NOT NULL	                                           Ensures a column cannot have a NULL value
+UNIQUE	                                               Ensures all values in a column are different
+PRIMARY KEY	                                           Uniquely identifies each row in a table (NOT NULL + UNIQUE)
+FOREIGN KEY	                                           Links two tables together
+CHECK	                                               Ensures values meet a specific condition
+DEFAULT	                                               Sets a default value if no value is provided
+AUTO_INCREMENT (MySQL) / IDENTITY (SQL Server)	       Automatically generates unique numbers for new rows
+
+1. NOT NULL Constraint
+Meaning: Column must have a value (cannot be NULL).
+Example:
+CREATE TABLE students (
+  id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  marks INT
+);
+
+
+Here, id and name cannot be left blank when inserting data.
+Insert Example:
+INSERT INTO students (id, name, marks) VALUES (1, 'Anil', 85);  -- ✅ Works
+INSERT INTO students (id, name, marks) VALUES (2, NULL, 90);   -- ❌ Error (name cannot be NULL)
+
+🔹 2. UNIQUE Constraint
+Meaning: No two rows can have the same value in this column.
+Example:
+CREATE TABLE employees (
+  emp_id INT UNIQUE,
+  emp_name VARCHAR(50),
+  email VARCHAR(100) UNIQUE
+);
+
+
+Each emp_id and email must be unique.
+Insert Example:
+INSERT INTO employees VALUES (1, 'Sakshi', 'sakshi@gmail.com');  -- ✅ Works
+INSERT INTO employees VALUES (2, 'Raj', 'sakshi@gmail.com');     -- ❌ Error (email duplicate)
+
+🔹 3. PRIMARY KEY Constraint
+Meaning: Uniquely identifies each record (cannot be NULL and must be unique).
+Example:
+
+CREATE TABLE students (
+  roll_no INT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT
+);
+
+Insert Example:
+INSERT INTO students VALUES (1, 'Anil', 78);  -- ✅
+INSERT INTO students VALUES (1, 'Bhumika', 93);  -- ❌ Duplicate roll_no
+
+🔹 4. FOREIGN KEY Constraint
+Meaning: Creates a link between two tables. The foreign key refers to the primary key of another table.
+Example:
+CREATE TABLE departments (
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(50)
+);
+
+CREATE TABLE employees (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(50),
+  dept_id INT,
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+
+Insert Example:
+INSERT INTO departments VALUES (1, 'HR');
+INSERT INTO employees VALUES (101, 'Sakshi', 1);  -- ✅ Works
+INSERT INTO employees VALUES (102, 'Yogesh', 2);  -- ❌ Error (dept_id 2 doesn’t exist)
+
+🔹 5. CHECK Constraint
+Meaning: Ensures that a column’s value satisfies a condition.
+
+Example:
+CREATE TABLE students (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT CHECK (marks >= 0 AND marks <= 100)
+);
+
+
+Insert Example:
+INSERT INTO students VALUES (1, 'Anil', 85);  -- ✅ Works
+INSERT INTO students VALUES (2, 'Farah', 150);  -- ❌ Error (marks > 100)
+
+🔹 6. DEFAULT Constraint
+Meaning: Assigns a default value if no value is provided.
+Example:
+CREATE TABLE students (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  city VARCHAR(50) DEFAULT 'Pune'
+);
+
+
+Insert Example:
+INSERT INTO students (id, name) VALUES (1, 'Anil');  -- city = 'Pune' automatically
+🔹 7. AUTO_INCREMENT (MySQL) / IDENTITY (SQL Server)
+Meaning: Automatically generates a unique number for each new record.
+Example (MySQL):
+CREATE TABLE students (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT
+);
+
+
+Insert Example:
+INSERT INTO students (name, marks) VALUES ('Anil', 85);
+INSERT INTO students (name, marks) VALUES ('Farah', 92);
+-- IDs will be automatically 1, 2, etc.
+
+✅ Combine Multiple Constraints
+You can use multiple constraints together:
+
+CREATE TABLE students (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  marks INT CHECK (marks BETWEEN 0 AND 100),
+  city VARCHAR(50) DEFAULT 'Mumbai'
+);
