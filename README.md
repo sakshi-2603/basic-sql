@@ -1,4 +1,18 @@
------------------------------------------------------------------Aggregation Function-----------------------------------------------------------
+--------------------------------------------------------SQL-----------------------------------------------------------------------
+What is SQL?
+
+SQL (Structured Query Language) is a standard language used to store, manipulate, and retrieve data in a relational database.
+It allows users to perform tasks such as:
+
+Creating and modifying database structures (tables, views, etc.)
+
+Inserting, updating, deleting, and retrieving data
+
+Managing user permissions and database security
+
+SQL is used in almost every database system such as:
+MySQL, Oracle, PostgreSQL, SQL Server, SQLite, etc.
+-----------------------------------------------------------------Aggregation Function--------------------------------------------------
 
 What Are Aggregate Functions?
 
