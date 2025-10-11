@@ -463,7 +463,7 @@ INSTEAD OF	NEW/OLD	Used in views
 Would you like me to make a diagram/table flow showing how the trigger fires and data flows for each operation (INSERT, UPDATE, DELETE)?
 It helps visualize how OLD and NEW values move between tables.
 
------------------------------------------------------Constraints Query ------------------------------------------------------------------
+-----------------------------------------------------Constraints Query ------------------------------------------------------------------            
 What Are Constraints?
 
 Constraints in SQL are rules applied to table columns to ensure the accuracy and reliability of data in a database.
