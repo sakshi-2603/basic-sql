@@ -483,6 +483,7 @@ CHECK	                                               Ensures values meet a speci
 DEFAULT	                                               Sets a default value if no value is provided
 AUTO_INCREMENT (MySQL) / IDENTITY (SQL Server)	       Automatically generates unique numbers for new rows
 
+
 1. NOT NULL Constraint
 Meaning: Column must have a value (cannot be NULL).
 Example:
@@ -497,6 +498,7 @@ Here, id and name cannot be left blank when inserting data.
 Insert Example:
 INSERT INTO students (id, name, marks) VALUES (1, 'Anil', 85);  -- ✅ Works
 INSERT INTO students (id, name, marks) VALUES (2, NULL, 90);   -- ❌ Error (name cannot be NULL)
+
 
 🔹 2. UNIQUE Constraint
 Meaning: No two rows can have the same value in this column.
@@ -513,6 +515,7 @@ Insert Example:
 INSERT INTO employees VALUES (1, 'Sakshi', 'sakshi@gmail.com');  -- ✅ Works
 INSERT INTO employees VALUES (2, 'Raj', 'sakshi@gmail.com');     -- ❌ Error (email duplicate)
 
+
 🔹 3. PRIMARY KEY Constraint
 Meaning: Uniquely identifies each record (cannot be NULL and must be unique).
 Example:
@@ -522,6 +525,7 @@ CREATE TABLE students (
   name VARCHAR(50),
   marks INT
 );
+
 
 Insert Example:
 INSERT INTO students VALUES (1, 'Anil', 78);  -- ✅
@@ -534,6 +538,7 @@ CREATE TABLE departments (
   dept_id INT PRIMARY KEY,
   dept_name VARCHAR(50)
 );
+
 
 CREATE TABLE employees (
   emp_id INT PRIMARY KEY,
@@ -548,6 +553,7 @@ INSERT INTO departments VALUES (1, 'HR');
 INSERT INTO employees VALUES (101, 'Sakshi', 1);  -- ✅ Works
 INSERT INTO employees VALUES (102, 'Yogesh', 2);  -- ❌ Error (dept_id 2 doesn’t exist)
 
+
 🔹 5. CHECK Constraint
 Meaning: Ensures that a column’s value satisfies a condition.
 
@@ -557,6 +563,7 @@ CREATE TABLE students (
   name VARCHAR(50),
   marks INT CHECK (marks >= 0 AND marks <= 100)
 );
+
 
 
 Insert Example:
@@ -571,6 +578,7 @@ CREATE TABLE students (
   name VARCHAR(50),
   city VARCHAR(50) DEFAULT 'Pune'
 );
+
 
 
 Insert Example:
